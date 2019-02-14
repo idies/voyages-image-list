@@ -1,0 +1,84 @@
+/*
+ * SQLSearchWP Plugin
+ * v1.0.0
+ */
+
+// Core variables and mixins
+@import "../vendor/bootstrap/less/bootstrap.less";
+
+@brand-secondary:         		   darken(#87CEEB, 10%);
+
+@btn-secondary-color:              #fff;
+@btn-secondary-bg:                 @brand-secondary;
+@btn-secondary-border:             darken(@btn-secondary-bg, 5%);
+
+@brand-tertiary:         		   darken(#8A2BE2, 10%);
+
+@btn-tertiary-color:              #fff;
+@btn-tertiary-bg:                 @brand-tertiary;
+@btn-tertiary-border:             darken(@btn-tertiary-bg, 5%);
+
+.sqls-wrap{
+	h2 {
+		.h3;
+	}
+	a.collapsed[data-toggle="collapse"]:before {
+		content: "\e081";
+	}
+	a[data-toggle="collapse"]:before {
+		font-family: 'Glyphicons Halflings';
+		content: "\e082";
+		float: left;
+		padding-right: 15px;
+	}
+	a[data-toggle="collapse"]:before {
+		font-family: 'Glyphicons Halflings';
+		content: "\e082";
+		float: left;
+		padding-right: 15px;
+		& .collapsed {
+			content: "\e081";
+		}
+	}
+	.sqls-messages{
+		margin-bottom: 10px;
+	}
+	.sqls-instructions{
+	}
+	.sqls-form{
+	}
+	.sqls-results-wrap.well {
+		//overflow-x: scroll;
+	}
+	.sqls-results{
+	}
+	//.container();
+}
+
+.btn-dr14 {
+  margin-bottom: 5px;
+}
+
+table {
+	width: 100%;
+}
+
+.sqls-query {
+    font-family: courier;
+	min-width: 100%;
+}
+
+.sqls-modal-dialog {
+  position: absolute;
+  top: 100px;
+  right: 100px;
+  bottom: 0;
+  left: 0;
+  z-index: 10040;
+  overflow: auto;
+  overflow-y: auto;
+}
+
+.sqls-hour {
+	font-size: 30pt;
+}
