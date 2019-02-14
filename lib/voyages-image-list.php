@@ -1,10 +1,10 @@
 <?php
 /*
-Plugin Name: SQLSearchWP CasJobs
-Plugin URI: https://github.com/idies/SQLSearchWP-Casjobs/blob/master/README.md
-Description: Query Casjobs
+Plugin Name: Voyages Image List
+Plugin URI: https://github.com/idies/voyages-image-list/blob/master/README.md
+Description: Process SQL query of dr14 database and use results to display images.
 Version: 1.0.0
-Author: William Harrington, Bonnie Souter
+Author: William Harrington
 Author URI: https://github.com/wharrington12
 License: MIT
 */
@@ -13,7 +13,7 @@ License: MIT
  * Singleton class for setting up the plugin.
  *
  */
-final class SQLSearchWP {
+final class VoyagesImageList {
 
 	public $dir_path = '';
 	public $dir_uri = '';
@@ -36,7 +36,7 @@ final class SQLSearchWP {
 		static $instance = null;
 		if ( is_null( $instance ) ) {
 			
-			$instance = new SQLSearchWP;
+			$instance = new VoyagesImageList;
 			$instance->setup();
 			$instance->includes();
 			$instance->setup_actions();
@@ -50,58 +50,58 @@ final class SQLSearchWP {
 	private function __construct() {
 		
 		//Add Scripts
-		add_action( 'wp_enqueue_scripts', array( $this , 'register_sqlswp_script' ) );
+		add_action( 'wp_enqueue_scripts', array( $this , 'register_vil_script' ) );
 		
 		//Add Shortcodes
-		add_shortcode( 'sqlsearchwp-casjobs' , array( $this , 'sqlsearchwp_shortcode' ) );
+		add_shortcode( 'voyages-image-list' , array( $this , 'voyages-image-list_shortcode' ) );
 		
 		//Add page(s) to the Admin Menu
-		add_action( 'admin_menu' , array( $this , 'sqls_menu' ) );
+		add_action( 'admin_menu' , array( $this , 'vil_menu' ) );
 
 	}
 	
 	 /**
 	 * Add shortcodes menu
 	**/
-	function sqls_menu() {
+	function vil_menu() {
 
 		// Add a submenu item and page to Tools 
-		add_management_page( 'SQLSearchWP Settings', 'SQLSearchWP Settings', 'export', 'sqlswp-tools-page' , array( 	$this , 'sqlswp_tools_page' ) );
+		add_management_page( 'VoyagesImageList Settings', 'VoyagesImageList Settings', 'export', 'vil-tools-page' , array( 	$this , 'vil_tools_page' ) );
 		
 	}
 
 	/**
 	 * Add shortcodes page
 	**/
-	function sqlswp_tools_page() {
+	function vil_tools_page() {
 		
 		if ( !current_user_can( 'export' ) )  {
 				wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 		}
 		echo '<div class="sqls-tools-wrap">';
-		echo '<h2>SQLSearchWP Settings</h2>';
+		echo '<h2>VoyagesImageList Settings</h2>';
 		echo '</div>';	
 	}
 
 	//
-	function register_sqlswp_script() {
+	function register_vil_script() {
 		
 		//Scripts to be Registered, but not enqueued. This example requires jquery
 	  if(defined('WP_ENV')) {
 	    if(WP_ENV == 'development') {
-		wp_register_script( 'sqlsearchwp-script', $this->js_uri . "sqlsearchwp.js" , array() , '1.0.0', true );
+		wp_register_script( 'voyages-image-list-script', $this->js_uri . "voyages-image-list.js" , array() , '1.0.0', true );
 		
 		//Styles to be Registered, but not enqueued
-		wp_register_style( 'sqlsearchwp-style', $this->css_uri . "sqlsearchwp.css" );
+		wp_register_style( 'voyages-image-list-style', $this->css_uri . "voyages-image-list.css" );
 	    } else {
-	        wp_register_script( 'sqlsearchwp-script', $this->js_uri . "sqlsearchwp.min.js", array() , '1.0.0', true );
-		wp_register_style( 'sqlsearchwp-style', $this->css_uri . "sqlsearchwp.min.css");
+	        wp_register_script( 'voyages-image-list-script', $this->js_uri . "voyages-image-list.min.js", array() , '1.0.0', true );
+		wp_register_style( 'voyages-image-list-style', $this->css_uri . "voyages-image-list.min.css");
 	    }
 	  }
 		
 	}
 
-	public function sqlsearchwp_shortcode( $atts = array() ) {
+	public function voyages-image-list_shortcode( $atts = array() ) {
 
 		$webroot = $this->dir_uri;
 		
@@ -110,39 +110,17 @@ final class SQLSearchWP {
 		$display = ( !empty( $atts) && array_key_exists( 'display' , $atts ) && 
 			in_array( $atts['display'] , $this->displays ) ) ? $atts['display'] : $this->displays[0] ; 
 			
-		$num = $atts['num']; 
-		$color = "";
-		if(!empty( $atts) && array_key_exists( 'color' , $atts )) {
-			$color = $atts['color'];
-		}
-		else {
-			$color = "black";
-		}
-		$instructions = "";
-		if(!empty( $atts) && array_key_exists( 'instructions' , $atts )) {
-			$instructions = $atts['instructions'];
-		}
-		else {
-			$instructions = "show";
-		}
-		$default = "";
-		if (!empty( $atts) && array_key_exists( 'default' , $atts )) {
-			$default = $atts['default'];
-		}
-		else {
-			$default = 'select top 10 p.objid, p.ra, p.dec, p.g, p.r, s.z from photoObj p join specObj s on s.bestobjid = p.objid where p.ra between -0.1 and 0.1 and p.dec between -0.1 and 0.1';
-		}
 		
 		//Shortcode loads scripts and styles
-		wp_enqueue_script( 'sqlsearchwp-script' );
-		wp_enqueue_style( 'sqlsearchwp-style' );
+		wp_enqueue_script( 'voyages-image-list-script' );
+		wp_enqueue_style( 'voyages-image-list-style' );
 		
-		if ( defined( 'SQLS_DEVELOP' ) && SQLS_DEVELOP ) 
+		if ( defined( 'VIL_DEVELOP' ) && VIL_DEVELOP ) 
 			wp_enqueue_script( 'bootstrap' );
 		else
 			wp_enqueue_script( 'bootstrap-min' );
 		
-		return $this->getForm( $which , $display , $webroot, $num , $color, $instructions, $default);
+		return $this->getForm( $which , $display , $webroot);
 	}
 	
 	public function getContextName() {
@@ -152,9 +130,9 @@ final class SQLSearchWP {
 	/**
 	 * Generate HTML for this form
 	 */
-	public function getForm( $which , $display , $webroot, $num, $color, $instructions, $default ) {
+	public function getForm( $which , $display , $webroot) {
 		//Content 
-		$result = '<div id="sqls-container-'. $num . '" class="sqls-wrap" data-sqls-webroot="' . $webroot . '" data-sqls-which="' . $which . '" data-sqls-display="' . $display . '" >';
+		$result = '<div id="vil-container" class="vil-wrap" data-vil-webroot="' . $webroot . '" data-vil-which="' . $which . '" data-vil-display="' . $display . '" >';
 		require($this->includes_dir . 'form-'. $which . '.php'); 
 		
 		$result .= '</div>';
@@ -165,28 +143,28 @@ final class SQLSearchWP {
 	 * Magic method to output a string if trying to use the object as a string.
 	 */
 	public function __toString() {
-		return 'sqlsearchwp';
+		return 'voyages-image-list';
 	}
 
 	/**
 	 * Magic method to keep the object from being cloned.
 	 */
 	public function __clone() {
-		_doing_it_wrong( __FUNCTION__, esc_html__( 'Sorry, no can do.', 'sqlsearchwp' ), '1.0' );
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Sorry, no can do.', 'voyages-image-list' ), '1.0' );
 	}
 
 	/**
 	 * Magic method to keep the object from being unserialized.
 	 */
 	public function __wakeup() {
-		_doing_it_wrong( __FUNCTION__, esc_html__( 'Sorry, no can do.', 'sqlsearchwp' ), '1.0' );
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Sorry, no can do.', 'voyages-image-list' ), '1.0' );
 	}
 
 	/**
 	 * Magic method to prevent a fatal error when calling a method that doesn't exist.
 	 */
 	public function __call( $method = '', $args = array() ) {
-		_doing_it_wrong( "SQLSearchWP::{$method}", esc_html__( 'Method does not exist.', 'sqlsearchwp' ), '1.0' );
+		_doing_it_wrong( "VoyagesImageList::{$method}", esc_html__( 'Method does not exist.', 'voyages-image-list' ), '1.0' );
 		unset( $method, $args );
 		return null;
 	}
@@ -197,8 +175,8 @@ final class SQLSearchWP {
 	private function setup() {
 
 		// Main plugin directory path and URI.
-		$this->dir_path = trailingslashit( SQLS_DIR_PATH );
-		$this->dir_uri  = trailingslashit( SQLS_DIR_URL );
+		$this->dir_path = trailingslashit( VIL_DIR_PATH );
+		$this->dir_uri  = trailingslashit( VIL_DIR_URL );
 
 		// Plugin directory paths.
 		$this->lib_dir       = trailingslashit( $this->dir_path . 'lib'       );
@@ -210,7 +188,7 @@ final class SQLSearchWP {
 		$this->bootstrap_uri  = trailingslashit( $this->dir_uri . 'vendor/bootstrap/dist/js'  );
 		
 		$this->whichs=array( 
-			'casjobs'
+			'imagelist'
 		);
 		$this->displays=array( 
 			'div' , 
@@ -245,9 +223,9 @@ final class SQLSearchWP {
 }
 
 /**
- * Gets the instance of the `SQLSearchWP` class.  This function is useful for quickly grabbing data
+ * Gets the instance of the `VoyagesImageList` class.  This function is useful for quickly grabbing data
  * used throughout the plugin.
  */
-function sqlswp_plugin() {
-	return SQLSearchWP::get_instance();
+function vil_plugin() {
+	return VoyagesImageList::get_instance();
 }
