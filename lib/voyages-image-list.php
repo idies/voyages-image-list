@@ -53,7 +53,7 @@ final class VoyagesImageList {
 		add_action( 'wp_enqueue_scripts', array( $this , 'register_vil_script' ) );
 		
 		//Add Shortcodes
-		add_shortcode( 'voyages-image-list' , array( $this , 'voyages-image-list_shortcode' ) );
+		add_shortcode( 'voyages-image-list' , array( $this , 'voyages_image_list_shortcode' ) );
 		
 		//Add page(s) to the Admin Menu
 		add_action( 'admin_menu' , array( $this , 'vil_menu' ) );
@@ -78,7 +78,7 @@ final class VoyagesImageList {
 		if ( !current_user_can( 'export' ) )  {
 				wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 		}
-		echo '<div class="sqls-tools-wrap">';
+		echo '<div class="vil-tools-wrap">';
 		echo '<h2>VoyagesImageList Settings</h2>';
 		echo '</div>';	
 	}
@@ -89,19 +89,19 @@ final class VoyagesImageList {
 		//Scripts to be Registered, but not enqueued. This example requires jquery
 	  if(defined('WP_ENV')) {
 	    if(WP_ENV == 'development') {
-		wp_register_script( 'voyages-image-list-script', $this->js_uri . "voyages-image-list.js" , array() , '1.0.0', true );
+		wp_register_script( 'voyages_image_list_script', $this->js_uri . "voyages-image-list.js" , array() , '1.0.0', true );
 		
 		//Styles to be Registered, but not enqueued
-		wp_register_style( 'voyages-image-list-style', $this->css_uri . "voyages-image-list.css" );
+		wp_register_style( 'voyages_image_list_style', $this->css_uri . "voyages-image-list.css" );
 	    } else {
-	        wp_register_script( 'voyages-image-list-script', $this->js_uri . "voyages-image-list.min.js", array() , '1.0.0', true );
-		wp_register_style( 'voyages-image-list-style', $this->css_uri . "voyages-image-list.min.css");
+	        wp_register_script( 'voyages_image_list_script', $this->js_uri . "voyages-image-list.min.js", array() , '1.0.0', true );
+		wp_register_style( 'voyages_image_list_style', $this->css_uri . "voyages-image-list.min.css");
 	    }
 	  }
 		
 	}
 
-	public function voyages-image-list_shortcode( $atts = array() ) {
+	public function voyages_image_list_shortcode( $atts = array() ) {
 
 		$webroot = $this->dir_uri;
 		
@@ -112,8 +112,8 @@ final class VoyagesImageList {
 			
 		
 		//Shortcode loads scripts and styles
-		wp_enqueue_script( 'voyages-image-list-script' );
-		wp_enqueue_style( 'voyages-image-list-style' );
+		wp_enqueue_script( 'voyages_image_list_script' );
+		wp_enqueue_style( 'voyages_image_list_style' );
 		
 		if ( defined( 'VIL_DEVELOP' ) && VIL_DEVELOP ) 
 			wp_enqueue_script( 'bootstrap' );

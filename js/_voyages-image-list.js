@@ -21,7 +21,7 @@
 		context: "#vil-container",
 		
 		targets: {
-		casjobs:{
+		imagelist:{
 			//put back in https:
 		    url:"//skyserver.sdss.org/casjobs/RestAPI/contexts/dr14/query",
 		    ContentType:"application/json",
@@ -43,7 +43,7 @@
 			// Show the Search Page
 			this.showInstructions( webroot+"includes/" );
 			this.showForm( voyages_image_list.context , false , true );
-			this.showInitialResults( '<br>Results Empty!<br><br><strong>Check Syntax</strong> or <strong>Submit</strong> to get results' , count);
+			this.showInitialResults( '<br>Results Empty!<br><br><strong>Check Syntax</strong> or <strong>Submit</strong> to get results');
 			
 			// Prevent form submitting/reloading page
 			$(".vil-form", voyages_image_list.context).on( "submit" , function( e ){ e.preventDefault(); });
@@ -150,7 +150,7 @@
 			var query = $("#vil-query").val();
 			var target = e.data.target;
 			var which = e.data.which;
-			target.data = {"Query":query};
+			target.data.Query = query;
 			$.ajax( target );
 		},
 		
@@ -164,7 +164,7 @@
 			$("#vil-hour").prop("style", "");
 			// Get target db from form data
 			var display = $( "#vil-container" ).data('vil-display');
-			var _query = e.currentTarget.dataset.vil-submitto + encodeURI( $("#vil-query").val() );
+			var _query = e.currentTarget.dataset.vilSubmitto + encodeURI( $("#vil-query").val() );
 
 			if ( display === 'div' ) {				
 				//send query from form to skyserverws and listen for return
