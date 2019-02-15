@@ -1,53 +1,50 @@
 <?php 
 $result .= '<div class="row">
 	<div class="col-lg-12">
-		<div class="sqls-messages-wrap">
-			<div class="sqls-messages">
+		<div class="vil-messages-wrap">
+			<div class="vil-messages">
 			</div>
 		</div>
 	</div>
-	<div class="col-xs-12">';
-	if($instructions === 'show') {
-		$result.= 
-		'<div class="sqls-instructions-wrap well well-sm"> 
-			<h2><a name="instruct" role="button" data-toggle="collapse" href="#sqls-instructions-'.$num.'" aria-expanded="true" aria-controls="sqls-instructions">Instructions</a></h2>
-			<div id="sqls-instructions-'.$num.'" class="sqls-instructions collapse">
+	<div class="col-xs-12">
+		<div class="vil-instructions-wrap well well-sm"> 
+			<h2><a name="instruct" role="button" data-toggle="collapse" href="#vil-instructions" aria-expanded="true" aria-controls="vil-instructions">Instructions</a></h2>
+			<div id="vil-instructions" class="vil-instructions collapse">
 			</div> 
-		</div>';
-	}
-		$result .= '<div class="sqls-form-wrap well well-sm">
-			<h2><a name="search" role="button" data-toggle="collapse" href="#sqls-form-'.$num.'" aria-expanded="true" aria-controls="sqls-form">SQL Search</a></h2>
-			<div class="form sqls-form">
-				<form id="sqls-form-'.$num.'" class="sqls-form collapse">
+		</div>
+		<div class="vil-form-wrap well well-sm">
+			<h2><a name="search" role="button" data-toggle="collapse" href="#vil-form" aria-expanded="true" aria-controls="vil-form">SQL Search</a></h2>
+			<div class="form vil-form">
+				<form id="vil-form" class="vil-form collapse">
 				<div class="row">
 					<div class="col-xs-12 col-sm-12 col-md-6 text-center">
 						<div class="row">
 							<div class="col-xs-12 col-sm-12 col-md-6 text-center">
-								<button id="sqls-edit-'.$num.'" name="sqls-edit" class ="sqls-edit btn btn-primary btn-dr14" data-unlock="yes">Unlock</button>
+								<button id="vil-edit" name="vil-edit" class ="vil-edit btn btn-primary btn-dr14" data-unlock="yes">Unlock</button>
 							</div>
 							<div class="col-xs-12 col-sm-12 col-md-6 text-center">
-								<button id="sqls-syntax-'.$num.'" name="sqls-syntax" data-sqls-submitto="http://skyserver.sdss.org/dr14/en/tools/search/x_results.aspx?searchtool=SQL&TaskName=Skyserver.Search.SQL&ReturnHtml=true&format=html&syntax=Syntax&cmd=" class="sqls-syntax btn btn-warning btn-dr14">Check Syntax</button>
+								<button id="vil-syntax" name="vil-syntax" data-vil-submitto="http://skyserver.sdss.org/dr14/en/tools/search/x_results.aspx?searchtool=SQL&TaskName=Skyserver.Search.SQL&ReturnHtml=true&format=html&syntax=Syntax&cmd=" class="vil-syntax btn btn-warning btn-dr14">Check Syntax</button>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-xs-12 col-sm-12 col-md-12 text-center">
 								<p><strong>QUERY DR14</strong></p>
-								<div id="sqls-lock-'.$num.'" class="sqls-lock" style=""><span class="glyphicon glyphicon-lock"></span></div>
-								<textarea id="sqls-query-'.$num.'" name="cmd" class="sqls-query" style="color: '.$color.'" data-colnum=60 rows=10 cols=30 disabled>'.$default.'</textarea>
+								<div id="vil-lock" class="vil-lock" style=""><span class="glyphicon glyphicon-lock"></span></div>
+								<textarea id="vil-query" name="cmd" class="vil-query" data-colnum=60 rows=10 cols=30 disabled>this is a query</textarea>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-xs-12 col-sm-12 col-md-6 text-center">
-								<button id="sqls-reset-'.$num.'" name="sqls-reset" class="sqls-reset btn btn-danger btn-dr14">Reset</button>
+								<button id="vil-reset" name="vil-reset" class="vil-reset btn btn-danger btn-dr14">Reset</button>
 							</div>
 							<div class="col-xs-12 col-sm-12 col-md-6 text-center">
-								<button id="sqls-submit-'.$num.'" name="sqls-submit" class="sqls-submit btn btn-success btn-dr14">Submit</button>
+								<button id="vil-submit" name="vil-submit" class="vil-submit btn btn-success btn-dr14">Submit</button>
 								<div class="checkbox">
-									<label><input type="checkbox" id="sqls-newWindow-'.$num.'" class="sqls-newWindow" data-value="no">Open in New Tab</label>
-									<a name="mode" href="#" data-toggle="modal" data-target="#myModal-'.$num.'"><span class="glyphicon glyphicon-info-sign"></span></a>
+									<label><input type="checkbox" id="vil-newWindow" class="vil-newWindow" data-value="no">Open in New Tab</label>
+									<a name="mode" href="#" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-info-sign"></span></a>
 								</div>
-								<div class="modal fade" id="myModal-'.$num.'" role="dialog">
-									<div class="modal-dialog modal-sm sqls-modal-dialog">
+								<div class="modal fade" id="myModal" role="dialog">
+									<div class="modal-dialog modal-sm vil-modal-dialog">
     
 										<!-- Modal content-->
 										<div class="modal-content">
@@ -68,12 +65,12 @@ $result .= '<div class="row">
 						</div>
 					</div>
 					<div class="col-xs-12 col-sm-12 col-md-6 text-center">
-						<div class="sqls-results-wrap">
-							<a name="result" role="button" data-toggle="collapse" href="#sqls-results-outer-'.$num.'" aria-expanded="false" aria-controls="sqls-results"><strong>RESULTS</strong></a>
-							<div id="sqls-hour-'.$num.'" class="sqls-hour" style="display: none;"><span class="glyphicon glyphicon-hourglass"></span></div>
-							<div id="sqls-results-outer-'.$num.'" class="sqls-results-outer collapse">
-								<div id="sqls-results-'.$num.'" class="sqls-results"></div>
-								<button id="sqls-download-'.$num.'" style="display:none;" name="sqls-download" class ="sqls-download btn btn-primary btn-dr14">Download</button>
+						<div class="vil-results-wrap">
+							<a name="result" role="button" data-toggle="collapse" href="#vil-results-outer" aria-expanded="false" aria-controls="vil-results"><strong>RESULTS</strong></a>
+							<div id="vil-hour" class="vil-hour" style="display: none;"><span class="glyphicon glyphicon-hourglass"></span></div>
+							<div id="vil-results-outer" class="vil-results-outer collapse">
+								<div id="vil-results" class="vil-results"></div>
+								<button id="vil-download" style="display:none;" name="vil-download" class ="vil-download btn btn-primary btn-dr14">Download</button>
 							</div>
 						</div>
 					</div>

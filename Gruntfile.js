@@ -22,7 +22,7 @@ module.exports = function(grunt) {
     'vendor/bootstrap/js/tab.js',
     //'vendor/bootstrap/js/affix.js',
     //'js/plugins/*.js',
-    'js/_sqlsearchwp.js'
+    'js/_voyages-image-list.js'
   ];
 
   grunt.initConfig({
@@ -34,8 +34,8 @@ module.exports = function(grunt) {
       },
       all: [
         'Gruntfile.js',
-        'js/_sqlsearchwp.js',
-        '!js/sqlsearchwp.js',
+        'js/_voyages-image-list.js',
+        '!js/voyages-image-list.js',
         '!**/*.min.*'
       ]
     },
@@ -44,8 +44,8 @@ module.exports = function(grunt) {
     less: {
       dev: {
         files: {
-          'css/sqlsearchwp.css': [
-		    'less/sqlsearchwp.less'
+          'css/voyages-image-list.css': [
+		    'less/voyages-image-list.less'
           ]
         },
         options: {
@@ -54,8 +54,8 @@ module.exports = function(grunt) {
       },
       build: {
         files: {
-          'css/sqlsearchwp.min.css': [
-            'less/sqlsearchwp.less'
+          'css/voyages-image-list.min.css': [
+            'less/voyages-image-list.less'
           ]
         },
         options: {
@@ -76,7 +76,7 @@ module.exports = function(grunt) {
       },
       dist: {
         src: [jsFileList],
-        dest: 'js/sqlsearchwp.js',
+        dest: 'js/voyages-image-list.js',
       },
     },
     
@@ -84,7 +84,7 @@ module.exports = function(grunt) {
     uglify: {
       dist: {
         files: {
-          'js/sqlsearchwp.min.js': [jsFileList]
+          'js/voyages-image-list.min.js': [jsFileList]
         }
       }
     },
@@ -105,10 +105,10 @@ module.exports = function(grunt) {
 					prev: 'css/'
 				  }
 			},
-			src: 'css/sqlsearchwp.css'
+			src: 'css/voyages-image-list.css'
 		},
 		build: {
-			src: 'css/sqlsearchwp.min.css'
+			src: 'css/voyages-image-list.min.css'
 		}
 	},
 
@@ -116,7 +116,7 @@ module.exports = function(grunt) {
     watch: {
       less: {
         files: [
-          'less/sqlsearchwp.less'
+          'less/voyages-image-list.less'
         ],
         tasks: [
 		  'less:dev',

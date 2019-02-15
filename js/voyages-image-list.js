@@ -1,4 +1,4 @@
-/*! SQLSearchWP-Casjobs - v1.0.0 - by:1.0.0 - license: - 2019-01-31 */+function ($) {
+/*! SQLSearchWP-Casjobs - v1.0.0 - by:1.0.0 - license: - 2019-02-15 */+function ($) {
   'use strict';
 
   // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)
@@ -1370,11 +1370,11 @@
 	// PUBLIC CLASS DEFINITION
 	// ================================
 
-	var SQLSDEBUG = true;
+	var VILDEBUG = true;
 
-	var sqlsearchwp = {
+	var voyages_image_list = {
 
-		context: "body",
+		context: "#vil-container",
 		
 		targets: {
 		casjobs:{
@@ -1384,62 +1384,52 @@
 		    type: "POST",
 		    data:{"Query":"","Accept":"application/xml"},
 		    success: function (data) {
-			sqlsearchwp.showResults( data , false , true, true );
+			voyages_image_list.showResults( data , false , true, true );
 		    }
 		}
 		},
 		
-		newWin: [],
-		
-		currentID: '0',
+		newWin: false,
 			
-		init: function(count){
+		init: function(){
 			// get base url of files, test or prod query, target query location, and how to show results.
-			for(var i = 0; i < count; i++) {
-				sqlsearchwp.newWin.push(false);
-			}
-			var webroot = $( "#sqls-container-0" ).data('sqls-webroot');
-			var which = $( "#sqls-container-0" ).data('sqls-which');
-			var target = sqlsearchwp.targets[which];
+			var webroot = $( "#vil-container" ).data('vil-webroot');
+			var which = $( "#vil-container" ).data('vil-which');
+			var target = voyages_image_list.targets[which];
 			// Show the Search Page
 			this.showInstructions( webroot+"includes/" );
-			this.showForm( sqlsearchwp.context , false , true );
+			this.showForm( voyages_image_list.context , false , true );
 			this.showInitialResults( '<br>Results Empty!<br><br><strong>Check Syntax</strong> or <strong>Submit</strong> to get results' , count);
 			
 			// Prevent form submitting/reloading page
-			$(".sqls-form", sqlsearchwp.context).on( "submit" , function( e ){ e.preventDefault(); });
-			$(".sqls-searchform", sqlsearchwp.context).on( "submit" , function( e ){ e.preventDefault(); });
+			$(".vil-form", voyages_image_list.context).on( "submit" , function( e ){ e.preventDefault(); });
+			$(".vil-searchform", voyages_image_list.context).on( "submit" , function( e ){ e.preventDefault(); });
 			
 			// Add (delegated) click event handlers to buttons
-			$(".sqls-edit", sqlsearchwp.context).on('click', sqlsearchwp.enableQuery);
-			$(".sqls-query", sqlsearchwp.context).on('input', sqlsearchwp.doQueryUpdate);
-			$(".sqls-download", sqlsearchwp.context).on('click', sqlsearchwp.download);
-			$(".sqls-newWindow", sqlsearchwp.context).on('change', sqlsearchwp.updateCheckbox);
-			$(".sqls-submit", sqlsearchwp.context).on( "click" , { target:target , which:which } , sqlsearchwp.doSubmit );
-			$(".sqls-syntax", sqlsearchwp.context).on( "click" , sqlsearchwp.doSyntax );
-			$(".sqls-reset", sqlsearchwp.context).on( "click" , sqlsearchwp.doReset );
+			$(".vil-edit", voyages_image_list.context).on('click', voyages_image_list.enableQuery);
+			$(".vil-query", voyages_image_list.context).on('input', voyages_image_list.doQueryUpdate);
+			$(".vil-download", voyages_image_list.context).on('click', voyages_image_list.download);
+			$(".vil-newWindow", voyages_image_list.context).on('change', voyages_image_list.updateCheckbox);
+			$(".vil-submit", voyages_image_list.context).on( "click" , { target:target , which:which } , voyages_image_list.doSubmit );
+			$(".vil-syntax", voyages_image_list.context).on( "click" , voyages_image_list.doSyntax );
+			$(".vil-reset", voyages_image_list.context).on( "click" , voyages_image_list.doReset );
 			
 		},
 		
-		showInitialResults: function(results, count) {
-			for(var i = 0; i < count; i++) {
-				sqlsearchwp.currentID = i.toString();
-				sqlsearchwp.showResults( results , false , false, false, false );
-				sqlsearchwp.showForm( sqlsearchwp.context , false , true );
-			}
+		showInitialResults: function(results) {
+			voyages_image_list.showResults( results , false , false, false, false );
+			voyages_image_list.showForm( voyages_image_list.context , false , true );
 		},
 		
 		updateCheckbox: function(e) {
-			var id = e.currentTarget.id;
-			var index = Number(id.slice(-1));
 			var setting = e.currentTarget.dataset.value;
 			if (setting === "no") {
 				setting = "yes";
-				sqlsearchwp.newWin[index] = true;
+				voyages_image_list.newWin = true;
 				e.currentTarget.dataset.value = setting;
 			} else {
 				setting = "no";
-				sqlsearchwp.newWin[index] = false;
+				voyages_image_list.newWin = false;
 				e.currentTarget.dataset.value = setting;
 			}
 		},
@@ -1454,8 +1444,7 @@
 		},
 		
 		download: function(e) {
-			var id = e.currentTarget.id;
-			var docText = sessionStorage.getItem('queryResults' + id.slice(-1));
+			var docText = sessionStorage.getItem('queryResults');
 			var lines = docText.split('\n');
 			docText = '';
 			for (var i = 0; i < lines.length-1; i++) {
@@ -1482,20 +1471,19 @@
 		},
 
 		enableQuery: function(e) {
-			var id = e.currentTarget.id;
-		if(e.currentTarget.dataset.unlock === "yes") {
-		    $("#sqls-query-" + id.slice(-1)).prop("disabled", false);
-		    e.currentTarget.dataset.unlock = "no";
-			e.currentTarget.innerHTML = 'Lock';
-			$("#sqls-lock-" + id.slice(-1)).prop("style", "display: none;");
-		}
-		else {
-		    $("#sqls-query-" + id.slice(-1)).prop("disabled", true);
-		    e.currentTarget.dataset.unlock = "yes";
-			e.currentTarget.innerHTML='Unlock';
-			$("#sqls-lock-" + id.slice(-1)).prop("style", "");
-		}
-	        },
+			if(e.currentTarget.dataset.unlock === "yes") {
+				$("#vil-query").prop("disabled", false);
+				e.currentTarget.dataset.unlock = "no";
+				e.currentTarget.innerHTML = 'Lock';
+				$("#vil-lock").prop("style", "display: none;");
+			}
+			else {
+				$("#vil-query").prop("disabled", true);
+				e.currentTarget.dataset.unlock = "yes";
+				e.currentTarget.innerHTML='Unlock';
+				$("#vil-lock").prop("style", "");
+			}
+	    },
 
 		/**
 		 *@summary Update the inner html of the query textarea with what the user enters
@@ -1503,10 +1491,8 @@
 		 *@param Object e Event Object
 		 **/
 		doQueryUpdate: function(e) {
-			var id = e.currentTarget.id;
-		
-                   var textValue = e.target.value;
-		   $("#sqls-query-" + id.slice(-1)).val(textValue);
+			var textValue = e.target.value;
+		    $("#vil-query").val(textValue);
 
 	    },
 		
@@ -1516,10 +1502,8 @@
 		 * @param Object e Event Object
 		**/
 		doSubmit: function( e ) {
-			var id = e.currentTarget.id;
-			sqlsearchwp.currentID = id.slice(-1);	
-			$("#sqls-hour-" + sqlsearchwp.currentID).prop("style", "");
-			var query = $("#sqls-query-" + sqlsearchwp.currentID).val();
+			$("#vil-hour").prop("style", "");
+			var query = $("#vil-query").val();
 			var target = e.data.target;
 			var which = e.data.which;
 			target.data = {"Query":query};
@@ -1532,14 +1516,11 @@
 		 * @param Object e Event Object
 		**/
 		doSyntax: function( e ) {
-			if (SQLSDEBUG) { console.log('doSyntax'); }
-			var id = e.currentTarget.id;
-			sqlsearchwp.currentID = id.slice(-1);
-			$("#sqls-hour-" + id.slice(-1)).prop("style", "");
+			if (VILDEBUG) { console.log('doSyntax'); }
+			$("#vil-hour").prop("style", "");
 			// Get target db from form data
-			var display = $( "#sqls-container-0" ).data('sqls-display');
-			var _query = e.currentTarget.dataset.sqlsSubmitto +
-				encodeURI( $("#sqls-query-" + id.slice(-1)).val() );
+			var display = $( "#vil-container" ).data('vil-display');
+			var _query = e.currentTarget.dataset.vil-submitto + encodeURI( $("#vil-query").val() );
 
 			if ( display === 'div' ) {				
 				//send query from form to skyserverws and listen for return
@@ -1548,7 +1529,7 @@
 				xhttp.onreadystatechange = function() {
 					if (this.readyState === 4 && this.status === 200) {
 						var response = this.responseText;
-						sqlsearchwp.showResults( response , false , true, false );
+						voyages_image_list.showResults( response , false , true, false );
 					}
 				};
 				xhttp.open("GET", _query, true);
@@ -1556,9 +1537,9 @@
 				
 			} else if ( display === 'iframe' ) {
 				
-			    sqlsearchwp.showResults( '' , false , true, false);
-				$(sqlsearchwp.context + " .sqls-results").append('<div class="embed-responsive embed-responsive-4by3"><iframe  class="embed-responsive-item" src="' + _query + '" name="sqls-iframe" id="sqls-iframe-' + sqlsearchwp.identity + '"></iframe></div>');
-				sqlsearchwp.showForm( '' , true , false );
+			    voyages_image_list.showResults( '' , false , true, false);
+				$(voyages_image_list.context + " .vil-results").append('<div class="embed-responsive embed-responsive-4by3"><iframe  class="embed-responsive-item" src="' + _query + '" name="vil-iframe" id="vil-iframe"></iframe></div>');
+				voyages_image_list.showForm( '' , true , false );
 				
 			} else {
 				
@@ -1573,11 +1554,9 @@
 		 * @param Object e Event Object
 		**/
 		doReset: function( e ) {
-			// Reset query - don't do this while testing...
-			var id = e.currentTarget.id;
-			sqlsearchwp.currentID = id.slice(-1);
-			sqlsearchwp.showResults( '<br>Results Empty!<br><br><strong>Check Syntax</strong> or <strong>Submit</strong> to get results' , false , false, false, false );
-			sqlsearchwp.showForm( sqlsearchwp.context , false , true );
+			// Reset query - don't do this while testing
+			voyages_image_list.showResults( '<br>Results Empty!<br><br><strong>Check Syntax</strong> or <strong>Submit</strong> to get results' , false , false, false, false );
+			voyages_image_list.showForm( voyages_image_list.context , false , true );
 		},
 		
 		doCollapse: function( toggle, container, show ) {
@@ -1590,9 +1569,9 @@
 		},
 		
 		showInstructions: function( instructions ) {
-			var instContainer = $(".sqls-instructions", sqlsearchwp.context);
-			var instWrapper = $(".sqls-instructions-wrap", sqlsearchwp.context);
-			var which = $( "#sqls-container-0" ).data('sqls-which');
+			var instContainer = $(".vil-instructions", voyages_image_list.context);
+			var instWrapper = $(".vil-instructions-wrap", voyages_image_list.context);
+			var which = $( "#vil-container" ).data('vil-which');
 
 			var xhttp;
 			xhttp = new XMLHttpRequest();
@@ -1607,13 +1586,13 @@
 		},
 		
 		showForm: function( context , append , show ) {
-			var toggle = $('.sqls-form-wrap>h2>a[data-toggle]', sqlsearchwp.context);
-			var container = $(".sqls-form-wrap", sqlsearchwp.context);
-			if (SQLSDEBUG) { console.log(  $( toggle ).attr('href') ); }
+			var toggle = $('.vil-form-wrap>h2>a[data-toggle]', voyages_image_list.context);
+			var container = $(".vil-form-wrap", voyages_image_list.context);
+			if (VILDEBUG) { console.log(  $( toggle ).attr('href') ); }
 			
 			var contents = ( append !== undefined && append ) ? $(container).html() : '' ;
 			
-			sqlsearchwp.doCollapse(sqlsearchwp.context + ' .sqls-form-wrap>h2>a[data-toggle]', container, show );
+			voyages_image_list.doCollapse(voyages_image_list.context + ' .vil-form-wrap>h2>a[data-toggle]', container, show );
 			
 		},
 		
@@ -1624,27 +1603,26 @@
 		 * @param Boolean $append Append or replace current message(s)
 		**/
 		showResults: function( results , append , show, format) {
-			var index = Number(sqlsearchwp.currentID);
 			if(format) {
-				sessionStorage.setItem('queryResults' + sqlsearchwp.currentID, results);
-				$("#sqls-download-" + sqlsearchwp.currentID).prop("style", "");
+				sessionStorage.setItem('queryResults', results);
+				$("#vil-download").prop("style", "");
 			} else {
-				$("#sqls-download-" + sqlsearchwp.currentID).prop("style", "display:none;");
+				$("#vil-download").prop("style", "display:none;");
 			}
-			var container = $("#sqls-results-" + sqlsearchwp.currentID);
+			var container = $("#vil-results");
 
 			var contents = ( append !== undefined && append ) ? $(container).html() : '' ;
 			
 			contents += ( results !== undefined ) ? results : '' ;
 			if (format) {
-			    contents = sqlsearchwp.formatResults(contents);
+			    contents = voyages_image_list.formatResults(contents);
 			} 
-			$("#sqls-hour-" + sqlsearchwp.currentID).prop("style", "display: none;");
+			$("#vil-hour").prop("style", "display: none;");
 			$(container).html(contents);
-			if (sqlsearchwp.newWin[index]) {
-				sqlsearchwp.openWindow(contents);
+			if (voyages_image_list.newWin) {
+				voyages_image_list.openWindow(contents);
 			}
-			sqlsearchwp.doCollapse(sqlsearchwp.context + ' .sqls-results-wrap>h2>a[data-toggle]', $("#sqls-results-outer-" + sqlsearchwp.currentID), show );
+			voyages_image_list.doCollapse(voyages_image_list.context + ' .vil-results-wrap>h2>a[data-toggle]', $("#vil-results-outer"), show );
 		},
 
 		formatResults: function(data) {
@@ -1673,8 +1651,8 @@
 	};
 
 	$(document).ready( function(  ) {
-		var divs = document.getElementsByClassName("sqls-wrap");
-		sqlsearchwp.init(divs.length);
+		//var divs = document.getElementsByClassName("vil-wrap");
+		voyages_image_list.init();
 	} );
 	
 })(jQuery);
