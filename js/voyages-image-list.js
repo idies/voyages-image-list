@@ -1670,8 +1670,10 @@
 					}
 					count++;
 				}
+				queryImages += '</table></pre>';
+			} else {
+				queryImages = "<pre><strong>QUERY ERROR</strong>: Make sure your query selects for name, ra, and dec in that order</pre>";
 			}
-			queryImages += '</table></pre>';
 		}
 		return queryImages;
 	}};
