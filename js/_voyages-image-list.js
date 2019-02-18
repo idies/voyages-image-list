@@ -246,21 +246,18 @@
 		 * @param String $results Results to display
 		 * @param Boolean $append Append or replace current message(s)
 		**/
-		showResults: function( results , append , show, format) {
-			if(format) {
-				sessionStorage.setItem('queryResults', results);
-				$("#vil-download").prop("style", "");
-			} else {
-				$("#vil-download").prop("style", "display:none;");
-			}
+		showResults: function( results , append , show, isSubmit) {
 			var container = $("#vil-results");
+			console.log(results);
 
 			var contents = ( append !== undefined && append ) ? $(container).html() : '' ;
 			
-			contents += ( results !== undefined ) ? results : '' ;
-			if (format) {
-			    contents = voyages_image_list.formatResults(contents);
-			} 
+			if(isSubmit) {
+				results = voyages_image_list.getImages(results);
+			}
+			
+			contents = contents + results;
+			console.log(contents);
 			$("#vil-hour").prop("style", "display: none;");
 			$(container).html(contents);
 			if (voyages_image_list.newWin) {
@@ -291,8 +288,27 @@
 			output += '</table></pre>';
 			return output;
 			
-	        }
-	};
+	    },
+	
+	getImages: function(data) {
+		var display = $( "#vil-container" ).data('vil-display');
+		var prepend = '<img style="-webkit-user-select: none;cursor: zoom-in;" src="http://skyserver.sdss.org/dr15/SkyServerWS/ImgCutout/getjpeg?';
+		var append = '&width=128&height=128&opt=OG" width="128" height="128">';
+		var queryImages = '';
+
+		if ( display === 'div' ) {				
+			var lines = data.split('\n');
+			if (lines[0] === 'ra,dec') {
+				for(var i = 1; i < lines.length - 1; i++) {
+					var line = lines[i];
+					var items = line.split(',');
+					var this_query = prepend + 'ra=' + items[0] + '&dec=' + items[1] + append;
+					queryImages += this_query;
+				}
+			}		
+		}
+		return queryImages;
+	}};
 
 	$(document).ready( function(  ) {
 		//var divs = document.getElementsByClassName("vil-wrap");

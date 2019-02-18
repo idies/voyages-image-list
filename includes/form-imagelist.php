@@ -13,7 +13,7 @@ $result .= '<div class="row">
 			</div> 
 		</div>
 		<div class="vil-form-wrap well well-sm">
-			<h2><a name="search" role="button" data-toggle="collapse" href="#vil-form" aria-expanded="true" aria-controls="vil-form">SQL Search</a></h2>
+			<h2><a name="search" role="button" data-toggle="collapse" href="#vil-form" aria-expanded="true" aria-controls="vil-form">Image List</a></h2>
 			<div class="form vil-form">
 				<form id="vil-form" class="vil-form collapse">
 				<div class="row">
@@ -28,7 +28,7 @@ $result .= '<div class="row">
 						</div>
 						<div class="row">
 							<div class="col-xs-12 col-sm-12 col-md-12 text-center">
-								<p><strong>QUERY DR14</strong></p>
+								<p><strong>QUERY DR15</strong></p>
 								<div id="vil-lock" class="vil-lock" style=""><span class="glyphicon glyphicon-lock"></span></div>
 								<textarea id="vil-query" name="cmd" class="vil-query" data-colnum=60 rows=10 cols=30 disabled>this is a query</textarea>
 							</div>

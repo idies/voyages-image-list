@@ -1,4 +1,4 @@
-/*! SQLSearchWP-Casjobs - v1.0.0 - by:1.0.0 - license: - 2019-02-15 */+function ($) {
+/*! SQLSearchWP-Casjobs - v1.0.0 - by:1.0.0 - license: - 2019-02-18 */+function ($) {
   'use strict';
 
   // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)
@@ -1529,6 +1529,7 @@
 				xhttp.onreadystatechange = function() {
 					if (this.readyState === 4 && this.status === 200) {
 						var response = this.responseText;
+						console.log("Syntax Response: " + response);
 						voyages_image_list.showResults( response , false , true, false );
 					}
 				};
@@ -1602,21 +1603,27 @@
 		 * @param String $results Results to display
 		 * @param Boolean $append Append or replace current message(s)
 		**/
-		showResults: function( results , append , show, format) {
-			if(format) {
+		showResults: function( results , append , show, isSubmit) {
+			/*if(format) {
 				sessionStorage.setItem('queryResults', results);
 				$("#vil-download").prop("style", "");
 			} else {
 				$("#vil-download").prop("style", "display:none;");
-			}
+			}*/
 			var container = $("#vil-results");
+			console.log(results);
 
 			var contents = ( append !== undefined && append ) ? $(container).html() : '' ;
 			
-			contents += ( results !== undefined ) ? results : '' ;
-			if (format) {
+			if(isSubmit) {
+				results = voyages_image_list.getImages(results);
+			}
+			
+			contents = contents + results;
+			console.log(contents);
+			/*if (format) {
 			    contents = voyages_image_list.formatResults(contents);
-			} 
+			} */
 			$("#vil-hour").prop("style", "display: none;");
 			$(container).html(contents);
 			if (voyages_image_list.newWin) {
@@ -1647,8 +1654,30 @@
 			output += '</table></pre>';
 			return output;
 			
-	        }
-	};
+	    },
+	
+	getImages: function(data) {
+		var display = $( "#vil-container" ).data('vil-display');
+		var prepend = '<img style="-webkit-user-select: none;cursor: zoom-in;" src="http://skyserver.sdss.org/dr15/SkyServerWS/ImgCutout/getjpeg?';
+		var append = '&width=128&height=128&opt=OG" width="128" height="128">';
+		var queryImages = '';
+
+		if ( display === 'div' ) {				
+			var lines = data.split('\n');
+			if (lines[0] === 'ra,dec') {
+				for(var i = 1; i < lines.length - 1; i++) {
+					var line = lines[i];
+					var items = line.split(',');
+					var this_query = prepend + 'ra=' + items[0] + '&dec=' + items[1] + append;
+					queryImages += this_query;
+					console.log(this_query);
+				}
+			}		
+		}
+		//queryImagesTest = _query + 'ra=224.5941&dec=-1.09&width=512&height=512';
+		//console.log("QueryImages: " + queryImages);
+		return queryImages;
+	}};
 
 	$(document).ready( function(  ) {
 		//var divs = document.getElementsByClassName("vil-wrap");
