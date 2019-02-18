@@ -292,20 +292,30 @@
 	
 	getImages: function(data) {
 		var display = $( "#vil-container" ).data('vil-display');
-		var prepend = '<img style="-webkit-user-select: none;cursor: zoom-in;" src="http://skyserver.sdss.org/dr15/SkyServerWS/ImgCutout/getjpeg?';
-		var append = '&width=128&height=128&opt=OG" width="128" height="128">';
-		var queryImages = '';
+		var href_prepend = '<a target="_blank" href="http://skyserver.sdss.org/dr15/en/tools/chart/navi.aspx?';
+		var append = '&width=128&height=128&opt=OG" width="128" height="128"></a></td>';
+		var prepend = '&scale=0.2&width=128&height=128"><img style="-webkit-user-select: none;cursor: zoom-in;" src="http://skyserver.sdss.org/dr15/SkyServerWS/ImgCutout/getjpeg?';
+		var queryImages = '<pre><table>';
 
 		if ( display === 'div' ) {				
 			var lines = data.split('\n');
-			if (lines[0] === 'ra,dec') {
+			if (lines[0] === 'name,ra,dec') {
+				var count = 0;
 				for(var i = 1; i < lines.length - 1; i++) {
 					var line = lines[i];
 					var items = line.split(',');
-					var this_query = prepend + 'ra=' + items[0] + '&dec=' + items[1] + append;
-					queryImages += this_query;
+					if (count%5 === 0) {
+						queryImages += '<tr>';
+					}
+					queryImages += ('<td><strong>name: </strong>' + items[0] + '<br><strong>ra: </strong>' + items[1] + '<br><strong>dec: </strong>' + items[2] + '<br>');
+					queryImages += (href_prepend + 'ra=' + items[1] + '&dec=' + items[2] + prepend + 'ra=' + items[1] + '&dec=' + items[2] + append);
+					if(count%5 === 4 || i === lines.length - 2) {
+						queryImages += '</tr>';
+					}
+					count++;
 				}
-			}		
+			}
+			queryImages += '</table></pre>';
 		}
 		return queryImages;
 	}};

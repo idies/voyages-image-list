@@ -30,7 +30,7 @@ $result .= '<div class="row">
 							<div class="col-xs-12 col-sm-12 col-md-12 text-center">
 								<p><strong>QUERY DR15</strong></p>
 								<div id="vil-lock" class="vil-lock" style=""><span class="glyphicon glyphicon-lock"></span></div>
-								<textarea id="vil-query" name="cmd" class="vil-query" data-colnum=60 rows=10 cols=30 disabled>this is a query</textarea>
+								<textarea id="vil-query" name="cmd" class="vil-query" data-colnum=60 rows=10 cols=30 disabled>select top 10 specobjid as name, ra, dec from SpecObj</textarea>
 							</div>
 						</div>
 						<div class="row">
