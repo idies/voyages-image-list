@@ -110,7 +110,28 @@ final class VoyagesImageList {
 		$display = ( !empty( $atts) && array_key_exists( 'display' , $atts ) && 
 			in_array( $atts['display'] , $this->displays ) ) ? $atts['display'] : $this->displays[0] ; 
 			
-		
+		$num = $atts['num']; 
+		$color = "";
+		if(!empty( $atts) && array_key_exists( 'color' , $atts )) {
+			$color = $atts['color'];
+		}
+		else {
+			$color = "black";
+		}
+		$instructions = "";
+		if(!empty( $atts) && array_key_exists( 'instructions' , $atts )) {
+			$instructions = $atts['instructions'];
+		}
+		else {
+			$instructions = "show";
+		}
+		$default = "";
+		if (!empty( $atts) && array_key_exists( 'default' , $atts )) {
+			$default = $atts['default'];
+		}
+		else {
+			$default = 'select top 10 specobjid as name, ra, dec from SpecObj';
+		}
 		//Shortcode loads scripts and styles
 		wp_enqueue_script( 'voyages_image_list_script' );
 		wp_enqueue_style( 'voyages_image_list_style' );
@@ -120,7 +141,7 @@ final class VoyagesImageList {
 		else
 			wp_enqueue_script( 'bootstrap-min' );
 		
-		return $this->getForm( $which , $display , $webroot);
+		return $this->getForm( $which , $display , $webroot, $num , $color, $instructions, $default);
 	}
 	
 	public function getContextName() {
@@ -130,7 +151,7 @@ final class VoyagesImageList {
 	/**
 	 * Generate HTML for this form
 	 */
-	public function getForm( $which , $display , $webroot) {
+	public function getForm( $which , $display , $webroot, $num , $color, $instructions, $default) {
 		//Content 
 		$result = '<div id="vil-container" class="vil-wrap" data-vil-webroot="' . $webroot . '" data-vil-which="' . $which . '" data-vil-display="' . $display . '" >';
 		require($this->includes_dir . 'form-'. $which . '.php'); 

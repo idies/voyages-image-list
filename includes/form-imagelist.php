@@ -5,14 +5,16 @@ $result .= '<div class="row">
 			<div class="vil-messages">
 			</div>
 		</div>
-	</div>
-	<div class="col-xs-12">
+	</div>';
+	if($instructions == "show") {
+		$result .= '<div class="col-xs-12">
 		<div class="vil-instructions-wrap well well-sm"> 
 			<h2><a name="instruct" role="button" data-toggle="collapse" href="#vil-instructions" aria-expanded="true" aria-controls="vil-instructions">Instructions</a></h2>
 			<div id="vil-instructions" class="vil-instructions collapse">
 			</div> 
-		</div>
-		<div class="vil-form-wrap well well-sm">
+		</div>';
+	}
+		$result .= '<div class="vil-form-wrap well well-sm">
 			<h2><a name="search" role="button" data-toggle="collapse" href="#vil-form" aria-expanded="true" aria-controls="vil-form">Image List</a></h2>
 			<div class="form vil-form">
 				<form id="vil-form" class="vil-form collapse">
@@ -30,7 +32,7 @@ $result .= '<div class="row">
 							<div class="col-xs-12 col-sm-12 col-md-12 text-center">
 								<p><strong>QUERY DR15</strong></p>
 								<div id="vil-lock" class="vil-lock" style=""><span class="glyphicon glyphicon-lock"></span></div>
-								<textarea id="vil-query" name="cmd" class="vil-query" data-colnum=60 rows=10 cols=30 disabled>select top 10 specobjid as name, ra, dec from SpecObj</textarea>
+								<textarea id="vil-query" name="cmd" class="vil-query" style="color: '.$color.'" data-colnum=60 rows=10 cols=30 disabled>'.$default.'</textarea>
 							</div>
 						</div>
 						<div class="row">
