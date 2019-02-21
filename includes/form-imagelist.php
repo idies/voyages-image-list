@@ -30,7 +30,25 @@ $result .= '<div class="row">
 						</div>
 						<div class="row">
 							<div class="col-xs-12 col-sm-12 col-md-12 text-center">
-								<p><strong>QUERY DR15</strong></p>
+								<p><strong>QUERY DR15</strong><a name="mode" href="#" data-toggle="modal" data-target="#myModal2-'.$num.'"><span class="glyphicon glyphicon-info-sign"></span></a></p>
+								<div class="modal fade" id="myModal2-'.$num.'" role="dialog">
+									<div class="modal-dialog modal-sm vil-modal-dialog">
+    
+										<!-- Modal content-->
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal">&times;</button>
+												<h4 class="modal-title">Important</h4>
+											</div>
+											<div class="modal-body">
+												Be sure your query is selecting name, ra, dec and nothing more.
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-default btn-primary btn-dr14" data-dismiss="modal">Close</button>
+											</div>
+										</div>
+									</div>
+								</div>
 								<div id="vil-lock-'.$num.'" class="vil-lock" style=""><span class="glyphicon glyphicon-lock"></span></div>
 								<textarea id="vil-query-'.$num.'" name="cmd" class="vil-query" style="color: '.$color.'" data-colnum=60 rows=10 cols=30 disabled>'.$default.'</textarea>
 							</div>
