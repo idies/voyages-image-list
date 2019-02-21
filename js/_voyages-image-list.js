@@ -18,7 +18,7 @@
 
 	var voyages_image_list = {
 
-		context: "#vil-container",
+		context: "body",
 		
 		targets: {
 		imagelist:{
@@ -33,17 +33,22 @@
 		}
 		},
 		
-		newWin: false,
+		newWin: [],
+		
+		currentID: '0',
 			
-		init: function(){
+		init: function(count){
+			for(var i = 0; i < count; i++) {
+				voyages_image_list.newWin.push(false);
+			}
 			// get base url of files, test or prod query, target query location, and how to show results.
-			var webroot = $( "#vil-container" ).data('vil-webroot');
-			var which = $( "#vil-container" ).data('vil-which');
+			var webroot = $( "#vil-container-0" ).data('vil-webroot');
+			var which = $( "#vil-container-0" ).data('vil-which');
 			var target = voyages_image_list.targets[which];
 			// Show the Search Page
 			this.showInstructions( webroot+"includes/" );
 			this.showForm( voyages_image_list.context , false , true );
-			this.showInitialResults( '<br>Results Empty!<br><br><strong>Check Syntax</strong> or <strong>Submit</strong> to get results');
+			this.showInitialResults( '<br>Results Empty!<br><br><strong>Check Syntax</strong> or <strong>Submit</strong> to get results', count);
 			
 			// Prevent form submitting/reloading page
 			$(".vil-form", voyages_image_list.context).on( "submit" , function( e ){ e.preventDefault(); });
@@ -52,7 +57,6 @@
 			// Add (delegated) click event handlers to buttons
 			$(".vil-edit", voyages_image_list.context).on('click', voyages_image_list.enableQuery);
 			$(".vil-query", voyages_image_list.context).on('input', voyages_image_list.doQueryUpdate);
-			$(".vil-download", voyages_image_list.context).on('click', voyages_image_list.download);
 			$(".vil-newWindow", voyages_image_list.context).on('change', voyages_image_list.updateCheckbox);
 			$(".vil-submit", voyages_image_list.context).on( "click" , { target:target , which:which } , voyages_image_list.doSubmit );
 			$(".vil-syntax", voyages_image_list.context).on( "click" , voyages_image_list.doSyntax );
@@ -60,20 +64,25 @@
 			
 		},
 		
-		showInitialResults: function(results) {
-			voyages_image_list.showResults( results , false , false, false, false );
-			voyages_image_list.showForm( voyages_image_list.context , false , true );
+		showInitialResults: function(results, count) {
+			for(var i = 0; i < count; i++) {
+				voyages_image_list.currentID = i.toString();
+				voyages_image_list.showResults( results , false , false, false);
+				voyages_image_list.showForm( voyages_image_list.context , false , true );
+			}
 		},
 		
 		updateCheckbox: function(e) {
+			var id = e.currentTarget.id;
+			var index = Number(id.slice(-1));
 			var setting = e.currentTarget.dataset.value;
 			if (setting === "no") {
 				setting = "yes";
-				voyages_image_list.newWin = true;
+				voyages_image_list.newWin[index] = true;
 				e.currentTarget.dataset.value = setting;
 			} else {
 				setting = "no";
-				voyages_image_list.newWin = false;
+				voyages_image_list.newWin[index] = false;
 				e.currentTarget.dataset.value = setting;
 			}
 		},
@@ -87,45 +96,19 @@
 			a.click();
 		},
 		
-		download: function(e) {
-			var docText = sessionStorage.getItem('queryResults');
-			var lines = docText.split('\n');
-			docText = '';
-			for (var i = 0; i < lines.length-1; i++) {
-				var values = lines[i].split(',');
-				for (var x = 0; x < values.length; x++) {
-					values[x] = '\"'.concat(values[x]);
-					values[x] += '\"';
-					docText += values[x];
-					if (x !== values.length - 1) {
-						docText += ',';
-					}
-				}
-				if (i !== lines.length - 1) {
-					docText += '\n';
-				}
-			}
-			var name = 'results.csv';
-			var type = 'text/csv';
-            var a = document.createElement("a");
-			var file = new Blob([docText], {type: type});
-			a.href = URL.createObjectURL(file);
-			a.download = name;
-			a.click();
-		},
-
 		enableQuery: function(e) {
+			var id = e.currentTarget.id;
 			if(e.currentTarget.dataset.unlock === "yes") {
-				$("#vil-query").prop("disabled", false);
+				$("#vil-query-" + id.slice(-1)).prop("disabled", false);
 				e.currentTarget.dataset.unlock = "no";
 				e.currentTarget.innerHTML = 'Lock';
-				$("#vil-lock").prop("style", "display: none;");
+				$("#vil-lock-" + id.slice(-1)).prop("style", "display: none;");
 			}
 			else {
-				$("#vil-query").prop("disabled", true);
+				$("#vil-query-" + id.slice(-1)).prop("disabled", true);
 				e.currentTarget.dataset.unlock = "yes";
 				e.currentTarget.innerHTML='Unlock';
-				$("#vil-lock").prop("style", "");
+				$("#vil-lock-" + id.slice(-1)).prop("style", "");
 			}
 	    },
 
@@ -135,8 +118,9 @@
 		 *@param Object e Event Object
 		 **/
 		doQueryUpdate: function(e) {
+			var id = e.currentTarget.id;
 			var textValue = e.target.value;
-		    $("#vil-query").val(textValue);
+		    $("#vil-query-" + id.slice(-1)).val(textValue);
 
 	    },
 		
@@ -146,8 +130,10 @@
 		 * @param Object e Event Object
 		**/
 		doSubmit: function( e ) {
-			$("#vil-hour").prop("style", "");
-			var query = $("#vil-query").val();
+			var id = e.currentTarget.id;
+			voyages_image_list.currentID = id.slice(-1);	
+			$("#vil-hour-" + voyages_image_list.currentID).prop("style", "");
+			var query = $("#vil-query-" + voyages_image_list.currentID).val();
 			var target = e.data.target;
 			var which = e.data.which;
 			target.data.Query = query;
@@ -161,10 +147,12 @@
 		**/
 		doSyntax: function( e ) {
 			if (VILDEBUG) { console.log('doSyntax'); }
-			$("#vil-hour").prop("style", "");
+			var id = e.currentTarget.id;
+			voyages_image_list.currentID = id.slice(-1);
+			$("#vil-hour-" + voyages_image_list.currentID).prop("style", "");
 			// Get target db from form data
-			var display = $( "#vil-container" ).data('vil-display');
-			var _query = e.currentTarget.dataset.vilSubmitto + encodeURI( $("#vil-query").val() );
+			var display = $( "#vil-container-0" ).data('vil-display');
+			var _query = e.currentTarget.dataset.vilSubmitto + encodeURI( $("#vil-query-" + id.slice(-1)).val() );
 
 			if ( display === 'div' ) {				
 				//send query from form to skyserverws and listen for return
@@ -182,7 +170,7 @@
 			} else if ( display === 'iframe' ) {
 				
 			    voyages_image_list.showResults( '' , false , true, false);
-				$(voyages_image_list.context + " .vil-results").append('<div class="embed-responsive embed-responsive-4by3"><iframe  class="embed-responsive-item" src="' + _query + '" name="vil-iframe" id="vil-iframe"></iframe></div>');
+				$(voyages_image_list.context + " .vil-results").append('<div class="embed-responsive embed-responsive-4by3"><iframe  class="embed-responsive-item" src="' + _query + '" name="vil-iframe" id="vil-iframe-' + voyages_image_list.currentID + '"></iframe></div>');
 				voyages_image_list.showForm( '' , true , false );
 				
 			} else {
@@ -199,6 +187,8 @@
 		**/
 		doReset: function( e ) {
 			// Reset query - don't do this while testing
+			var id = e.currentTarget.id;
+			voyages_image_list.currentID = id.slice(-1);
 			voyages_image_list.showResults( '<br>Results Empty!<br><br><strong>Check Syntax</strong> or <strong>Submit</strong> to get results' , false , false, false, false );
 			voyages_image_list.showForm( voyages_image_list.context , false , true );
 		},
@@ -215,7 +205,7 @@
 		showInstructions: function( instructions ) {
 			var instContainer = $(".vil-instructions", voyages_image_list.context);
 			var instWrapper = $(".vil-instructions-wrap", voyages_image_list.context);
-			var which = $( "#vil-container" ).data('vil-which');
+			var which = $( "#vil-container-0" ).data('vil-which');
 
 			var xhttp;
 			xhttp = new XMLHttpRequest();
@@ -247,8 +237,8 @@
 		 * @param Boolean $append Append or replace current message(s)
 		**/
 		showResults: function( results , append , show, isSubmit) {
-			var container = $("#vil-results");
-			console.log(results);
+			var index = Number(voyages_image_list.currentID);
+			var container = $("#vil-results-" + voyages_image_list.currentID);
 
 			var contents = ( append !== undefined && append ) ? $(container).html() : '' ;
 			
@@ -256,42 +246,17 @@
 				results = voyages_image_list.getImages(results);
 			}
 			
-			contents = contents + results;
-			console.log(contents);
-			$("#vil-hour").prop("style", "display: none;");
+			contents += ( results !== undefined ) ? results : '' ;
+			$("#vil-hour-" + voyages_image_list.currentID).prop("style", "display: none;");
 			$(container).html(contents);
-			if (voyages_image_list.newWin) {
+			if (voyages_image_list.newWin[index]) {
 				voyages_image_list.openWindow(contents);
 			}
-			voyages_image_list.doCollapse(voyages_image_list.context + ' .vil-results-wrap>h2>a[data-toggle]', $("#vil-results-outer"), show );
+			voyages_image_list.doCollapse(voyages_image_list.context + ' .vil-results-wrap>h2>a[data-toggle]', $("#vil-results-outer-" + voyages_image_list.currentID), show );
 		},
-
-		formatResults: function(data) {
-		        var output = '<pre><table class="table-bordered table-responsive">';
-		        var lines = data.split('\n');
-			for(var i = 0; i < lines.length - 1; i++) {
-			    output += '<tr>';
-			    var items = lines[i].split(',');
-			    var symbolBegin = '<td>';
-			    var symbolEnd = '</td>';
-			    if (i === 0) {
-				symbolBegin = '<th>';
-				symbolEnd = '</th>';
-			    }
-			    for (var x = 0; x < items.length; x++) {
-				output += symbolBegin;
-				output += items[x];
-				output += symbolEnd;
-			    }
-			    output += '</tr>';
-			}
-			output += '</table></pre>';
-			return output;
-			
-	    },
 	
 	getImages: function(data) {
-		var display = $( "#vil-container" ).data('vil-display');
+		var display = $( "#vil-container-0" ).data('vil-display');
 		var href_prepend = '<a target="_blank" href="http://skyserver.sdss.org/dr15/en/tools/chart/navi.aspx?';
 		var append = '&width=128&height=128&opt=OG" width="128" height="128"></a></td>';
 		var prepend = '&scale=0.2&width=128&height=128"><img style="-webkit-user-select: none;cursor: zoom-in;" src="http://skyserver.sdss.org/dr15/SkyServerWS/ImgCutout/getjpeg?';
@@ -323,8 +288,8 @@
 	}};
 
 	$(document).ready( function(  ) {
-		//var divs = document.getElementsByClassName("vil-wrap");
-		voyages_image_list.init();
+		var divs = document.getElementsByClassName("vil-wrap");
+		voyages_image_list.init(divs.length);
 	} );
 	
 })(jQuery);

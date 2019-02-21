@@ -153,7 +153,7 @@ final class VoyagesImageList {
 	 */
 	public function getForm( $which , $display , $webroot, $num , $color, $instructions, $default) {
 		//Content 
-		$result = '<div id="vil-container" class="vil-wrap" data-vil-webroot="' . $webroot . '" data-vil-which="' . $which . '" data-vil-display="' . $display . '" >';
+		$result = '<div id="vil-container-'.$num.'" class="vil-wrap" data-vil-webroot="' . $webroot . '" data-vil-which="' . $which . '" data-vil-display="' . $display . '" >';
 		require($this->includes_dir . 'form-'. $which . '.php'); 
 		
 		$result .= '</div>';
