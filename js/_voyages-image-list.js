@@ -259,7 +259,7 @@
 		var display = $( "#vil-container-0" ).data('vil-display');
 		var href_prepend = '<a target="_blank" href="http://skyserver.sdss.org/dr15/en/tools/chart/navi.aspx?';
 		var append = '&width=128&height=128&opt=OG" width="128" height="128"></a></td>';
-		var prepend = '&scale=0.2&width=128&height=128"><img style="-webkit-user-select: none;cursor: zoom-in;" src="http://skyserver.sdss.org/dr15/SkyServerWS/ImgCutout/getjpeg?';
+		var prepend = '&scale=0.2&width=128&height=128"><img style="-webkit-user-select: none;" src="http://skyserver.sdss.org/dr15/SkyServerWS/ImgCutout/getjpeg?';
 		var queryImages = '<pre><table>';
 
 		if ( display === 'div' ) {				
